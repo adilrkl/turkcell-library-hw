@@ -12,7 +12,7 @@
 	<artifactId>spring-library</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-library</name>
-	<description>
+	<description>spring-library</description>
 
 	<properties>
 		<java.version>21</java.version>

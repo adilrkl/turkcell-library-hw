@@ -13,6 +13,7 @@ import com.turkcell.spring_library.dto.user.UpdateUserRequest;
 import com.turkcell.spring_library.dto.user.UpdatedUserResponse;
 import com.turkcell.spring_library.dto.user.UserResponse;
 import com.turkcell.spring_library.entity.User;
+import com.turkcell.spring_library.exception.BusinessException;
 import com.turkcell.spring_library.repository.UserRepository;
 
 @Service
@@ -41,7 +42,7 @@ public class UserServiceImpl {
 
     public UserResponse getById(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("User bulunamadi: " + id));
 
         UserResponse response = new UserResponse();
         response.setId(user.getId());
@@ -75,7 +76,7 @@ public class UserServiceImpl {
 
     public UpdatedUserResponse update(UUID id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("User bulunamadi: " + id));
 
         user.setName(request.getName());
         user.setSurname(request.getSurname());
@@ -96,7 +97,7 @@ public class UserServiceImpl {
 
     public void delete(UUID id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User bulunamadi: " + id);
+            throw new BusinessException("User bulunamadi: " + id);
         }
         userRepository.deleteById(id);
     }

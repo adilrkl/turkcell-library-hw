@@ -15,6 +15,7 @@ import com.turkcell.spring_library.dto.bookcopy.UpdatedBookCopyResponse;
 import com.turkcell.spring_library.entity.Book;
 import com.turkcell.spring_library.entity.BookCopy;
 import com.turkcell.spring_library.entity.enums.BookCopyStatus;
+import com.turkcell.spring_library.exception.BusinessException;
 import com.turkcell.spring_library.repository.BookCopyRepository;
 import com.turkcell.spring_library.repository.BookRepository;
 
@@ -48,7 +49,7 @@ public class BookCopyServiceImpl {
 
     public BookCopyResponse getById(UUID id) {
         BookCopy bookCopy = bookCopyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("BookCopy bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("BookCopy bulunamadi: " + id));
 
         BookCopyResponse response = new BookCopyResponse();
         response.setId(bookCopy.getId());
@@ -62,7 +63,7 @@ public class BookCopyServiceImpl {
 
     public CreatedBookCopyResponse create(CreateBookCopyRequest request) {
         Book book = bookRepository.findById(request.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book bulunamadi: " + request.getBookId()));
+                .orElseThrow(() -> new BusinessException("Book bulunamadi: " + request.getBookId()));
 
         BookCopy bookCopy = new BookCopy();
         bookCopy.setBook(book);
@@ -79,10 +80,10 @@ public class BookCopyServiceImpl {
 
     public UpdatedBookCopyResponse update(UUID id, UpdateBookCopyRequest request) {
         BookCopy bookCopy = bookCopyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("BookCopy bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("BookCopy bulunamadi: " + id));
 
         Book book = bookRepository.findById(request.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book bulunamadi: " + request.getBookId()));
+                .orElseThrow(() -> new BusinessException("Book bulunamadi: " + request.getBookId()));
 
         bookCopy.setBook(book);
         bookCopy.setStatus(request.getStatus());
@@ -98,7 +99,7 @@ public class BookCopyServiceImpl {
 
     public void delete(UUID id) {
         if (!bookCopyRepository.existsById(id)) {
-            throw new RuntimeException("BookCopy bulunamadi: " + id);
+            throw new BusinessException("BookCopy bulunamadi: " + id);
         }
         bookCopyRepository.deleteById(id);
     }

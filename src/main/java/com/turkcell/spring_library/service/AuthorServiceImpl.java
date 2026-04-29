@@ -13,6 +13,7 @@ import com.turkcell.spring_library.dto.author.ListAuthorResponse;
 import com.turkcell.spring_library.dto.author.UpdateAuthorRequest;
 import com.turkcell.spring_library.dto.author.UpdatedAuthorResponse;
 import com.turkcell.spring_library.entity.Author;
+import com.turkcell.spring_library.exception.BusinessException;
 import com.turkcell.spring_library.repository.AuthorRepository;
 
 @Service
@@ -40,7 +41,7 @@ public class AuthorServiceImpl {
 
     public AuthorResponse getById(UUID id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Author bulunamadi: " + id));
 
         AuthorResponse response = new AuthorResponse();
         response.setId(author.getId());
@@ -65,7 +66,7 @@ public class AuthorServiceImpl {
 
     public UpdatedAuthorResponse update(UUID id, UpdateAuthorRequest request) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Author bulunamadi: " + id));
 
         author.setName(request.getName());
         author.setSurname(request.getSurname());
@@ -80,7 +81,7 @@ public class AuthorServiceImpl {
 
     public void delete(UUID id) {
         if (!authorRepository.existsById(id)) {
-            throw new RuntimeException("Author bulunamadi: " + id);
+            throw new BusinessException("Author bulunamadi: " + id);
         }
         authorRepository.deleteById(id);
     }

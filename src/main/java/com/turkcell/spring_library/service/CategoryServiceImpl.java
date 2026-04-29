@@ -13,6 +13,7 @@ import com.turkcell.spring_library.dto.category.ListCategoryResponse;
 import com.turkcell.spring_library.dto.category.UpdateCategoryRequest;
 import com.turkcell.spring_library.dto.category.UpdatedCategoryResponse;
 import com.turkcell.spring_library.entity.Category;
+import com.turkcell.spring_library.exception.BusinessException;
 import com.turkcell.spring_library.repository.CategoryRepository;
 
 @Service
@@ -39,7 +40,7 @@ public class CategoryServiceImpl {
 
     public CategoryResponse getById(UUID id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Category bulunamadi: " + id));
 
         CategoryResponse response = new CategoryResponse();
         response.setId(category.getId());
@@ -61,7 +62,7 @@ public class CategoryServiceImpl {
 
     public UpdatedCategoryResponse update(UUID id, UpdateCategoryRequest request) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Category bulunamadi: " + id));
 
         category.setName(request.getName());
         category = categoryRepository.save(category);
@@ -74,7 +75,7 @@ public class CategoryServiceImpl {
 
     public void delete(UUID id) {
         if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category bulunamadi: " + id);
+            throw new BusinessException("Category bulunamadi: " + id);
         }
         categoryRepository.deleteById(id);
     }

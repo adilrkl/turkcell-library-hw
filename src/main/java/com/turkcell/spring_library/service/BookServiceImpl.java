@@ -15,6 +15,7 @@ import com.turkcell.spring_library.dto.book.UpdatedBookResponse;
 import com.turkcell.spring_library.entity.Author;
 import com.turkcell.spring_library.entity.Book;
 import com.turkcell.spring_library.entity.Category;
+import com.turkcell.spring_library.exception.BusinessException;
 import com.turkcell.spring_library.repository.AuthorRepository;
 import com.turkcell.spring_library.repository.BookRepository;
 import com.turkcell.spring_library.repository.CategoryRepository;
@@ -57,7 +58,7 @@ public class BookServiceImpl {
 
     public BookResponse getById(UUID id) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Book bulunamadi: " + id));
 
         BookResponse response = new BookResponse();
         response.setId(book.getId());
@@ -77,9 +78,9 @@ public class BookServiceImpl {
 
     public CreatedBookResponse create(CreateBookRequest request) {
         Author author = authorRepository.findById(request.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author bulunamadi: " + request.getAuthorId()));
+                .orElseThrow(() -> new BusinessException("Author bulunamadi: " + request.getAuthorId()));
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category bulunamadi: " + request.getCategoryId()));
+                .orElseThrow(() -> new BusinessException("Category bulunamadi: " + request.getCategoryId()));
 
         Book book = new Book();
         book.setName(request.getName());
@@ -102,12 +103,12 @@ public class BookServiceImpl {
 
     public UpdatedBookResponse update(UUID id, UpdateBookRequest request) {
         Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Book bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Book bulunamadi: " + id));
 
         Author author = authorRepository.findById(request.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author bulunamadi: " + request.getAuthorId()));
+                .orElseThrow(() -> new BusinessException("Author bulunamadi: " + request.getAuthorId()));
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category bulunamadi: " + request.getCategoryId()));
+                .orElseThrow(() -> new BusinessException("Category bulunamadi: " + request.getCategoryId()));
 
         book.setName(request.getName());
         book.setPage(request.getPage());
@@ -129,7 +130,7 @@ public class BookServiceImpl {
 
     public void delete(UUID id) {
         if (!bookRepository.existsById(id)) {
-            throw new RuntimeException("Book bulunamadi: " + id);
+            throw new BusinessException("Book bulunamadi: " + id);
         }
         bookRepository.deleteById(id);
     }

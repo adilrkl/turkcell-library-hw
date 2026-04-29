@@ -17,6 +17,7 @@ import com.turkcell.spring_library.entity.BookCopy;
 import com.turkcell.spring_library.entity.Transaction;
 import com.turkcell.spring_library.entity.User;
 import com.turkcell.spring_library.entity.enums.TransactionStatus;
+import com.turkcell.spring_library.exception.BusinessException;
 import com.turkcell.spring_library.repository.BookCopyRepository;
 import com.turkcell.spring_library.repository.TransactionRepository;
 import com.turkcell.spring_library.repository.UserRepository;
@@ -60,7 +61,7 @@ public class TransactionServiceImpl {
 
     public TransactionResponse getById(UUID id) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Transaction bulunamadi: " + id));
 
         TransactionResponse response = new TransactionResponse();
         response.setId(transaction.getId());
@@ -88,11 +89,11 @@ public class TransactionServiceImpl {
 
     public CreatedTransactionResponse create(CreateTransactionRequest request) {
         User borrower = userRepository.findById(request.getBorrowerId())
-                .orElseThrow(() -> new RuntimeException("Borrower bulunamadi: " + request.getBorrowerId()));
+                .orElseThrow(() -> new BusinessException("Borrower bulunamadi: " + request.getBorrowerId()));
         BookCopy bookCopy = bookCopyRepository.findById(request.getBookCopyId())
-                .orElseThrow(() -> new RuntimeException("BookCopy bulunamadi: " + request.getBookCopyId()));
+                .orElseThrow(() -> new BusinessException("BookCopy bulunamadi: " + request.getBookCopyId()));
         User processedBy = userRepository.findById(request.getProcessedById())
-                .orElseThrow(() -> new RuntimeException("ProcessedBy bulunamadi: " + request.getProcessedById()));
+                .orElseThrow(() -> new BusinessException("ProcessedBy bulunamadi: " + request.getProcessedById()));
 
         Transaction transaction = new Transaction();
         transaction.setBorrower(borrower);
@@ -117,14 +118,14 @@ public class TransactionServiceImpl {
 
     public UpdatedTransactionResponse update(UUID id, UpdateTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction bulunamadi: " + id));
+                .orElseThrow(() -> new BusinessException("Transaction bulunamadi: " + id));
 
         User borrower = userRepository.findById(request.getBorrowerId())
-                .orElseThrow(() -> new RuntimeException("Borrower bulunamadi: " + request.getBorrowerId()));
+                .orElseThrow(() -> new BusinessException("Borrower bulunamadi: " + request.getBorrowerId()));
         BookCopy bookCopy = bookCopyRepository.findById(request.getBookCopyId())
-                .orElseThrow(() -> new RuntimeException("BookCopy bulunamadi: " + request.getBookCopyId()));
+                .orElseThrow(() -> new BusinessException("BookCopy bulunamadi: " + request.getBookCopyId()));
         User processedBy = userRepository.findById(request.getProcessedById())
-                .orElseThrow(() -> new RuntimeException("ProcessedBy bulunamadi: " + request.getProcessedById()));
+                .orElseThrow(() -> new BusinessException("ProcessedBy bulunamadi: " + request.getProcessedById()));
 
         transaction.setBorrower(borrower);
         transaction.setBookCopy(bookCopy);
@@ -152,7 +153,7 @@ public class TransactionServiceImpl {
 
     public void delete(UUID id) {
         if (!transactionRepository.existsById(id)) {
-            throw new RuntimeException("Transaction bulunamadi: " + id);
+            throw new BusinessException("Transaction bulunamadi: " + id);
         }
         transactionRepository.deleteById(id);
     }
